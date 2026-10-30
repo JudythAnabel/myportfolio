@@ -1,0 +1,805 @@
+/* ==========================================================================
+   Judyth A. Carro Narváez — Portfolio styles
+   Plain CSS, mobile-first: base rules are for phones, media queries add
+   the tablet and desktop layout.
+
+   Contents
+   1. Fonts
+   2. Theme colors and design tokens
+   3. Base
+   4. Utilities (container, skip link, hidden text, focus)
+   5. Header, navigation, theme toggle
+   6. Hero and decorative shapes
+   7. Sections and titles
+   8. About
+   9. Skills
+   10. Projects
+   11. Contact
+   12. Footer
+   13. Motion (only when the visitor allows it)
+   14. High-contrast mode
+   ========================================================================== */
+
+
+/* --------------------------------------------------------------------------
+   1. Fonts
+   The fonts are listed by name in the tokens below, so they show if they are
+   installed on the visitor's device; otherwise a rounded system font is used.
+   To host them with the site: add the font files to a fonts/ folder next to
+   index.html, uncomment these blocks, and match the file names to yours
+   (.ttf files work too: use format("truetype")).
+   -------------------------------------------------------------------------- */
+
+/*
+@font-face {
+  font-family: "Quicksand";
+  src: url("../fonts/Quicksand.woff2") format("woff2");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Swung Note";
+  src: url("../fonts/SwungNote.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+*/
+
+
+/* --------------------------------------------------------------------------
+   2. Theme colors and design tokens
+   Light theme is the default. Dark theme applies when:
+   - the device prefers dark and the visitor hasn't picked light, or
+   - the visitor turned dark on with the toggle (data-theme="dark").
+   The two dark blocks hold the same values; keep them in sync.
+   -------------------------------------------------------------------------- */
+
+:root {
+  /* Light theme */
+  --color-bg: #FFFCEE;
+  --color-heading: #731161;
+  --color-text: #B1436C;
+  --color-accent: #731161;
+  --color-accent-hover: #B1436C;
+  --color-on-accent: #FFFCEE;
+  --color-link: #731161;
+  --color-card: #CFE6BB;
+  --color-card-text: #731161;
+  --color-card-heading: #731161;
+  --color-badge-bg: #FFFCEE;
+  --color-badge-text: #731161;
+  --color-border: rgba(115, 17, 97, 0.16);
+  --color-border-strong: rgba(115, 17, 97, 0.35);
+  --color-header-bg: rgba(255, 252, 238, 0.92);
+  --color-shape-pink: #B1436C;
+  --color-tape: rgba(177, 67, 108, 0.24);
+  --shadow-card: 0 0.9rem 1.6rem -0.9rem rgba(115, 17, 97, 0.35);
+  color-scheme: light;
+
+  /* Type */
+  --font-body: "Quicksand", ui-rounded, "Segoe UI", system-ui, -apple-system,
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-heading: "Swung Note", "Quicksand", ui-rounded, "Segoe UI", system-ui,
+    -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Space and shape */
+  --container: 70rem;
+  --gutter: clamp(1rem, 4vw, 2rem);
+  --section-space: clamp(3.5rem, 9vw, 6.5rem);
+  --radius-pill: 999px;
+  --radius-soft: 1.25rem 0.9rem 1.4rem 1rem / 1rem 1.3rem 0.9rem 1.2rem;
+  --radius-card: 2rem 1.5rem 2.25rem 1.25rem / 1.5rem 2.25rem 1.5rem 2rem;
+  --radius-blob: 58% 42% 63% 37% / 45% 55% 45% 55%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg: #24101F;
+    --color-heading: #F4C6DD;
+    --color-text: #FFFCEE;
+    --color-accent: #E88AB0;
+    --color-accent-hover: #F4C6DD;
+    --color-on-accent: #24101F;
+    --color-link: #E88AB0;
+    --color-card: #2F3A28;
+    --color-card-text: #FFFCEE;
+    --color-card-heading: #F4C6DD;
+    --color-badge-bg: #24101F;
+    --color-badge-text: #E88AB0;
+    --color-border: rgba(244, 198, 221, 0.18);
+    --color-border-strong: rgba(244, 198, 221, 0.38);
+    --color-header-bg: rgba(36, 16, 31, 0.92);
+    --color-shape-pink: #E88AB0;
+    --color-tape: rgba(232, 138, 176, 0.32);
+    --shadow-card: 0 0.9rem 1.6rem -0.9rem rgba(0, 0, 0, 0.7);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --color-bg: #24101F;
+  --color-heading: #F4C6DD;
+  --color-text: #FFFCEE;
+  --color-accent: #E88AB0;
+  --color-accent-hover: #F4C6DD;
+  --color-on-accent: #24101F;
+  --color-link: #E88AB0;
+  --color-card: #2F3A28;
+  --color-card-text: #FFFCEE;
+  --color-card-heading: #F4C6DD;
+  --color-badge-bg: #24101F;
+  --color-badge-text: #E88AB0;
+  --color-border: rgba(244, 198, 221, 0.18);
+  --color-border-strong: rgba(244, 198, 221, 0.38);
+  --color-header-bg: rgba(36, 16, 31, 0.92);
+  --color-shape-pink: #E88AB0;
+  --color-tape: rgba(232, 138, 176, 0.32);
+  --shadow-card: 0 0.9rem 1.6rem -0.9rem rgba(0, 0, 0, 0.7);
+  color-scheme: dark;
+}
+
+
+/* --------------------------------------------------------------------------
+   3. Base
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.7;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  color: var(--color-heading);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-synthesis: none; /* no fake bold if the heading font has one weight */
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--color-link);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.2em;
+}
+
+ul[role="list"] {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+svg {
+  display: block;
+  flex-shrink: 0;
+}
+
+::selection {
+  background-color: var(--color-card);
+  color: var(--color-card-text);
+}
+
+
+/* --------------------------------------------------------------------------
+   4. Utilities
+   -------------------------------------------------------------------------- */
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Text for screen readers only */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Hidden until a keyboard user tabs to it */
+.skip-link {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-soft);
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+/* Clear focus ring for keyboard users */
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* <main> receives focus from the skip link; no ring needed there */
+#main:focus {
+  outline: none;
+}
+
+
+/* --------------------------------------------------------------------------
+   5. Header, navigation, theme toggle
+   Phones: name + toggle on the first row, links on the second.
+   Desktop (56rem+): one row, and the header stays at the top while scrolling.
+   -------------------------------------------------------------------------- */
+
+.site-header {
+  background-color: var(--color-header-bg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 1.5rem;
+  padding-block: 0.875rem;
+}
+
+.brand {
+  margin-right: auto;
+  color: var(--color-heading);
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-synthesis: none;
+  line-height: 1.3;
+  text-decoration: none;
+}
+
+.site-nav {
+  order: 3;
+  width: 100%;
+}
+
+.nav-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.25rem;
+}
+
+.nav-list a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--color-heading);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.brand:hover,
+.nav-list a:hover {
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: var(--color-text);
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.35em;
+}
+
+/* Theme toggle */
+.theme-toggle {
+  order: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0.5rem;
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--color-accent);
+  font: inherit;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  background-color: var(--color-card);
+  color: var(--color-card-text);
+}
+
+/* Pressed = dark theme is on */
+.theme-toggle[aria-pressed="true"] {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.theme-toggle[aria-pressed="true"]:hover {
+  border-color: var(--color-accent-hover);
+  background-color: var(--color-accent-hover);
+}
+
+/* Moon while light is on, sun while dark is on */
+.theme-toggle .icon-sun,
+.theme-toggle[aria-pressed="true"] .icon-moon {
+  display: none;
+}
+
+.theme-toggle[aria-pressed="true"] .icon-sun {
+  display: block;
+}
+
+/* Phones: icon-only button; the label stays readable by screen readers */
+.theme-toggle-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Without JavaScript the toggle can't work, so it's hidden */
+.no-js .theme-toggle {
+  display: none;
+}
+
+@media (min-width: 30rem) {
+  .theme-toggle {
+    padding: 0.5rem 1rem;
+  }
+
+  .theme-toggle-label {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    clip-path: none;
+  }
+}
+
+@media (min-width: 56rem) {
+  html {
+    scroll-padding-top: 5.5rem; /* section titles don't hide under the header */
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+
+  .header-inner {
+    flex-wrap: nowrap;
+  }
+
+  .brand {
+    font-size: 1.375rem;
+  }
+
+  .site-nav {
+    order: 2;
+    width: auto;
+  }
+
+  .theme-toggle {
+    order: 3;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   6. Hero and decorative shapes
+   -------------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  isolation: isolate; /* keeps the shapes behind the text */
+  overflow: hidden;
+  padding-block: clamp(4rem, 14vw, 8.5rem) clamp(3.5rem, 10vw, 6.5rem);
+}
+
+.hero-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.hero-name {
+  font-size: clamp(2.5rem, 9vw, 5.25rem);
+  line-height: 1.05;
+  overflow-wrap: break-word;
+}
+
+.hero-role {
+  color: var(--color-text);
+  font-size: clamp(1.125rem, 2.6vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.hero-intro {
+  max-width: 40rem;
+  font-size: clamp(1.0625rem, 2vw, 1.25rem);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem 1.75rem;
+  border: 2px solid transparent;
+  border-radius: var(--radius-soft);
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.button:hover {
+  background-color: var(--color-accent-hover);
+}
+
+/* Organic blobs (decorative only) */
+.shape {
+  position: absolute;
+  z-index: -1;
+  display: block;
+  aspect-ratio: 1;
+  border-radius: var(--radius-blob);
+  pointer-events: none;
+}
+
+.shape--one {
+  top: -2.5rem;
+  right: -3.5rem;
+  width: clamp(9rem, 32vw, 24rem);
+  background-color: var(--color-card);
+  opacity: 0.7;
+}
+
+.shape--two {
+  bottom: -2rem;
+  left: -2.5rem;
+  width: clamp(6rem, 18vw, 12rem);
+  border-radius: 42% 58% 37% 63% / 55% 45% 55% 45%;
+  background-color: var(--color-shape-pink);
+  opacity: 0.14;
+}
+
+.shape--three {
+  right: -3rem;
+  bottom: -4rem;
+  width: clamp(8rem, 26vw, 18rem);
+  background-color: var(--color-card);
+  opacity: 0.6;
+}
+
+
+/* --------------------------------------------------------------------------
+   7. Sections and titles
+   -------------------------------------------------------------------------- */
+
+.section {
+  padding-block: var(--section-space);
+}
+
+.section-title {
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+  font-size: clamp(2rem, 5.5vw, 3rem);
+}
+
+/* Hand-drawn squiggle under each section title */
+.section-title::after {
+  content: "";
+  display: block;
+  width: 5.5rem;
+  height: 0.75rem;
+  margin-top: 0.5rem;
+  background-color: var(--color-text);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 88 12'%3E%3Cpath d='M2 6c7-6 14-6 21 0s14 6 21 0 14-6 21 0 14 6 21 0' fill='none' stroke='black' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / contain;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 88 12'%3E%3Cpath d='M2 6c7-6 14-6 21 0s14 6 21 0 14-6 21 0 14 6 21 0' fill='none' stroke='black' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / contain;
+}
+
+
+/* --------------------------------------------------------------------------
+   8. About
+   -------------------------------------------------------------------------- */
+
+.about-text {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 65ch; /* comfortable line length */
+}
+
+@media (min-width: 48rem) {
+  .about-text {
+    font-size: 1.125rem;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   9. Skills
+   -------------------------------------------------------------------------- */
+
+.skill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.skill-tag {
+  padding: 0.5rem 1.1rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-soft);
+  background-color: var(--color-card);
+  color: var(--color-card-text);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* Slight tilt, like stickers on a page */
+.skill-tag:nth-child(3n + 1) {
+  transform: rotate(-1deg);
+}
+
+.skill-tag:nth-child(3n + 2) {
+  transform: rotate(0.75deg);
+}
+
+
+/* --------------------------------------------------------------------------
+   10. Projects
+   One column on phones; as many columns as fit (up to 3) on wider screens.
+   -------------------------------------------------------------------------- */
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: 2.25rem 1.5rem;
+  padding-top: 0.75rem; /* room for the tape */
+}
+
+.project-grid > li {
+  display: flex;
+}
+
+.project-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+  min-height: 11rem;
+  padding: 2rem 1.75rem 1.75rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-card);
+  background-color: var(--color-card);
+  color: var(--color-card-text);
+  box-shadow: var(--shadow-card);
+}
+
+/* Washi tape strip */
+.project-card::before {
+  content: "";
+  position: absolute;
+  top: -0.7rem;
+  left: 50%;
+  width: 4.5rem;
+  height: 1.4rem;
+  border-radius: 2px;
+  background-color: var(--color-tape);
+  transform: translateX(-50%) rotate(-3deg);
+}
+
+.project-grid > li:nth-child(even) .project-card::before {
+  transform: translateX(-50%) rotate(4deg);
+}
+
+.project-title {
+  color: var(--color-card-heading);
+  font-size: clamp(1.375rem, 3vw, 1.625rem);
+  line-height: 1.25;
+}
+
+.project-status {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 0.3rem 0.85rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-badge-bg);
+  color: var(--color-badge-text);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+
+/* --------------------------------------------------------------------------
+   11. Contact
+   -------------------------------------------------------------------------- */
+
+.contact {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.contact-lead {
+  margin-bottom: 1.75rem;
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  font-weight: 700;
+}
+
+.contact-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 1rem;
+  max-width: 46rem;
+}
+
+.contact-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  height: 100%;
+  padding: 1.1rem 1.4rem;
+  border: 2px solid var(--color-border-strong);
+  border-radius: var(--radius-soft);
+  background-color: var(--color-bg);
+  text-decoration: none;
+}
+
+.contact-label {
+  color: var(--color-text);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.contact-value {
+  color: var(--color-link);
+  font-size: 1rem;
+  font-weight: 700;
+  overflow-wrap: anywhere; /* very narrow screens: wraps instead of overflowing */
+}
+
+@media (min-width: 30rem) {
+  .contact-value {
+    font-size: 1.0625rem;
+  }
+}
+
+.contact-link:hover {
+  border-color: var(--color-card);
+  background-color: var(--color-card);
+}
+
+.contact-link:hover .contact-label,
+.contact-link:hover .contact-value {
+  color: var(--color-card-text);
+}
+
+
+/* --------------------------------------------------------------------------
+   12. Footer
+   -------------------------------------------------------------------------- */
+
+.site-footer {
+  padding-block: 2rem;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.9375rem;
+}
+
+.footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+}
+
+.back-to-top {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-weight: 700;
+}
+
+
+/* --------------------------------------------------------------------------
+   13. Motion
+   Only for visitors who haven't asked their device to reduce motion.
+   (Future scrapbook enter/exit animations belong here too.)
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .button,
+  .theme-toggle,
+  .contact-link {
+    transition: background-color 0.2s ease, color 0.2s ease,
+      border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .button:hover {
+    transform: rotate(-1.5deg) scale(1.03);
+  }
+
+  .contact-link:hover {
+    transform: rotate(-0.5deg);
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   14. High-contrast mode (Windows "Contrast themes")
+   Transparent borders above become visible here; the pressed toggle gets a
+   system highlight so its state is still clear.
+   -------------------------------------------------------------------------- */
+
+@media (forced-colors: active) {
+  .theme-toggle[aria-pressed="true"] {
+    background-color: Highlight;
+    color: HighlightText;
+  }
+}
